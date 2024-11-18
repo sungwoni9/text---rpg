@@ -43,7 +43,7 @@ public class Guild extends Stage {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean update() {
 		while (true) {
@@ -81,15 +81,15 @@ public class Guild extends Stage {
 		buffer.append("[골드 : " + Player.money + "]");
 		buffer.append("============= [길드원] =================");
 		for (int i = 0; i < guildList.size(); i++) {
-			buffer.append("[" + (i + 1) + "번]");
-			buffer.append(" [이름 : " + guildList.get(i).name + "]");
-			buffer.append(" [레벨 : " + guildList.get(i).level + "]");
-			buffer.append(" [체력 : " + guildList.get(i).hp);
-			buffer.append(" / " + guildList.get(i).maxHp + "]");
-			buffer.append("[공격력 : " + guildList.get(i).att + "]");
-			buffer.append(" [방어력 : " + guildList.get(i).def + "]");
-			buffer.append(" [파티중 : " + guildList.get(i).party + "]");
+			Player player = guildList.get(i);
+			buffer.append("[").append(i + 1).append("번] [이름 : ").append(player.getName());
+			buffer.append("] [레벨 : ").append(player.getLevel()).append("]");
+			buffer.append(" [체력 : ").append(player.getMaxHp()).append("]");
+			buffer.append(" [공격력 : ").append(player.getAtt()).append("]");
+			buffer.append(" [방어력 : ").append(player.getDef()).append("]");
+			buffer.append(" [파티중 : ").append(player.isParty()).append("]\n");
 		}
+
 		buffer.append("======================================");
 
 		try {
@@ -122,7 +122,7 @@ public class Guild extends Stage {
 
 	public void printUnitStaus(int selUnit) {
 		guildList.get(selUnit);
-		Player.printStatus();
+		Player.getStatus();
 	}
 
 	public void printUnitItem(int selUnit) {
@@ -130,5 +130,4 @@ public class Guild extends Stage {
 		Player.printEquitedItem();
 	}
 
-	
 }
