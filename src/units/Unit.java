@@ -4,33 +4,33 @@ import playerSystem.Item;
 
 public abstract class Unit {
 
-	private String name;
-	private int level;
-	private int hp;
-	private int maxHp;
-	private int att;
-	private int def;
-	private int luck;
-	private int exp;
-	private boolean party;
+	private static String name;
+	private static int level;
+	private static int hp;
+	private static int maxHp;
+	private static int att;
+	private static int def;
+	private static int luck;
+	private static int exp;
+	private static boolean party;
 
-	Item weapon;
-	Item armor;
-	Item ring;
-	String state = "노말";
+	static Item weapon;
+	static Item armor;
+	static Item ring;
+	static String state = "노말";
 
 	Unit() {
 	}
 
 	public Unit(String name, int level, int hp, int att, int def, int luck, int exp) {
-		this.name = name;
-		this.level = level;
-		this.maxHp = hp;
-		this.hp = maxHp;
-		this.att = att;
-		this.luck = luck;
-		this.def = def;
-		this.exp = exp;
+		Unit.name = name;
+		Unit.level = level;
+		Unit.maxHp = hp;
+		Unit.hp = maxHp;
+		Unit.att = att;
+		Unit.luck = luck;
+		Unit.def = def;
+		Unit.exp = exp;
 		party = false;
 		weapon = null;
 		armor = null;
@@ -39,36 +39,36 @@ public abstract class Unit {
 
 	public Unit(String name, int level, int hp, int att, int def, int luck, int exp, boolean party) {
 		super();
-		this.name = name;
-		this.level = level;
-		this.maxHp = hp;
-		this.hp = maxHp;
-		this.att = att;
-		this.luck = luck;
-		this.def = def;
-		this.exp = exp;
-		this.party = party;
+		Unit.name = name;
+		Unit.level = level;
+		Unit.maxHp = hp;
+		Unit.hp = maxHp;
+		Unit.att = att;
+		Unit.luck = luck;
+		Unit.def = def;
+		Unit.exp = exp;
+		Unit.party = party;
 		weapon = null;
 		armor = null;
 		ring = null;
 	}
 
-	private StringBuffer buffer = new StringBuffer();
+	private static StringBuffer buffer = new StringBuffer();
 
 	public void setItem(Item weapon, Item armor, Item ring) {
-		this.weapon = weapon;
-		this.armor = armor;
-		this.ring = ring;
+		Item.weapon = weapon;
+		Item.armor = armor;
+		Item.ring = ring;
 	}
 
-	public String getStatus() {
+	public static String getStatus() {
 		int extraHp = armor == null ? 0 : ring.getPower();
 		int extraAtt = weapon == null ? 0 : weapon.getPower();
 		int extraDef = armor == null ? 0 : armor.getPower();
 		int extraluck = ring == null ? 0 : ring.getPower();
 
 		buffer.setLength(0);
-		buffer.append("[이름 : ").append(name).append("]");
+		buffer.append(" [이름 : ").append(name).append("]");
 		buffer.append(" [레벨 : ").append(level).append("]");
 		buffer.append(" [체력 : ").append(maxHp).append(" + ").append(extraHp).append("]");
 		buffer.append(" [공격력 : ").append(att).append(" + ").append(extraAtt).append("]");
