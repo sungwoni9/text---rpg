@@ -11,6 +11,7 @@ public class StageLobby extends Stage {
 	@Override
 	public boolean update() {
 		buffer.setLength(0);
+		System.out.println();
 		buffer.append("=====[LOBBY]=====\n");
 		buffer.append("[1. 전투] [2. 메뉴] [3. 종료]\n☞");
 
@@ -40,6 +41,8 @@ public class StageLobby extends Stage {
 
 		return false;
 	}
+	
+	
 
 	@Override
 	public void init() {

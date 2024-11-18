@@ -12,7 +12,9 @@ import stage.Stage;
 import stage.StageBattle;
 import stage.StageInit;
 import stage.StageLobby;
+import stage.StageMenu;
 import units.Player;
+import units.UnitManager;
 
 public class GameManager {
 
@@ -39,6 +41,10 @@ public class GameManager {
 		}
 	}
 
+	public static GameManager getInstance() {
+		return instance;
+	}
+
 	public static Player getPlayer() {
 		return player;
 	}
@@ -63,42 +69,6 @@ public class GameManager {
 		GameManager.currentStage = currentStage;
 	}
 
-	public static GameManager getInstance() {
-		return instance;
-	}
-
-	public static void setInstance(GameManager instance) {
-		GameManager.instance = instance;
-	}
-
-	public static StringBuilder getBuffer() {
-		return buffer;
-	}
-
-	public static void setBuffer(StringBuilder buffer) {
-		GameManager.buffer = buffer;
-	}
-
-	public Map<String, Stage> getStageList() {
-		return stageList;
-	}
-
-	public void setStageList(Map<String, Stage> stageList) {
-		this.stageList = stageList;
-	}
-
-	public static void setReader(BufferedReader reader) {
-		GameManager.reader = reader;
-	}
-
-	public static void setWriter(BufferedWriter writer) {
-		GameManager.writer = writer;
-	}
-
-	public static GameManager instance() {
-		return instance;
-	}
-
 	public static BufferedReader getReader() {
 		return reader;
 	}
@@ -108,20 +78,22 @@ public class GameManager {
 	}
 
 	void init() {
+		UnitManager.getInstance();
+
 		stageList.put("TITLE", new StageInit());
+		stageList.put("LOBBY", new StageLobby());
+		stageList.put("MENU", new StageMenu());
 		stageList.put("LOBBY", new StageLobby());
 		stageList.put("BATTLE", new StageBattle());
 		nextStage = "TITLE";
 	}
 
-	public static boolean changeStage() {
-		buffer.setLength(0);
-		buffer.append("\ncurrentStage : " + currentStage);
-		buffer.append("\nnextStage : " + nextStage);
+	boolean changeStage() {
 		try {
 			GameManager.writer.write(buffer.toString());
 			GameManager.writer.flush();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		if (currentStage.equals(nextStage))
@@ -129,25 +101,39 @@ public class GameManager {
 
 		currentStage = nextStage;
 		Stage stage = stageList.get(currentStage);
-
-		if (stage == null) {
-			buffer.setLength(0);
-			buffer.append("잘못된 스테이지입니다: " + currentStage);
-			return false;
-		}
-
 		stage.init();
 
 		boolean run = true;
 		while (run) {
 			run = stage.update();
-			if (run == false)
-				break;
 		}
+
 		if (nextStage.equals(""))
 			return false;
-		else
-			return true;
+
+		return true;
+	}
+
+	public static int selMenu(String msg) {
+		System.out.print(msg + " ☞ ");
+		int num = -1;
+
+		try {
+			String input = reader.readLine();
+			num = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			System.err.println("숫자로 입력하세요");
+		} catch (Exception e) {
+			System.err.println("입력 오류 발생");
+		}
+		return num;
+	}
+
+	public static void show() {
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+		}
 	}
 
 }

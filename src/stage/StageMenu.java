@@ -1,6 +1,7 @@
 package stage;
 
 import textRpg.GameManager;
+import units.UnitManager;
 
 public class StageMenu extends Stage {
 
@@ -8,26 +9,34 @@ public class StageMenu extends Stage {
 	private final int SHOP = 2;
 	private final int INVENTORY = 3;
 
-	public void printAndSelMenu() {
-		buffer.append("[1.길드] [2.상점] [3.인벤토리]");
+	public boolean update() {
+		buffer.append("\n=====[MENU]=====\n");
+		buffer.append("[1.길드] [2.상점] [3.인벤토리]\n☞");
+		
 		try {
 			writer.write(buffer.toString());
 			writer.flush();
 
 			String input = reader.readLine();
 			int sel = Integer.parseInt(input);
-			
-			if (input == GUILD)
+
+			if (sel == GUILD)
 				GameManager.nextStage = "GUILD";
-			else if (input.equals(SHOP))
+			else if (sel == SHOP)
 				GameManager.nextStage = "SHOP";
-			else if (input.equals(INVENTORY))
+			else if (sel == INVENTORY)
 				GameManager.nextStage = "INVENTORY";
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		return false;
+	}
+
+	@Override
+	public void init() {
+		UnitManager.instance.init();
 	}
 
 }
