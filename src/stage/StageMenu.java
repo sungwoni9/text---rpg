@@ -11,7 +11,7 @@ public class StageMenu extends Stage {
 
 	public boolean update() {
 		buffer.append("\n=====[MENU]=====\n");
-		buffer.append("[1.길드] [2.상점] [3.인벤토리]\n☞");
+		buffer.append("[1.길드] [2.상점] \n[3.인벤토리]\n☞");
 		
 		try {
 			writer.write(buffer.toString());
