@@ -11,12 +11,12 @@ import units.Unit;
 
 abstract public class Guild extends Stage {
 
-	final int PARTY_SIZE = 3;
-	Vector<Player> guildList = new Vector<>();
+	final static int PARTY_SIZE = 3;
+	static Vector<Player> guildList = new Vector<>();
 	private StringBuffer buffer = new StringBuffer();
 
 	Random random = new Random();
-	Unit[] partyList;
+	static Unit[] partyList;
 
 	private final int PRINT = 1;
 	private final int ADD = 2;
@@ -25,7 +25,7 @@ abstract public class Guild extends Stage {
 	private final int CHANGEORDER = 5;
 	private final int BACK = 6;
 
-	public void setGuild() {
+	public static void setGuild() {
 		guildList.add(new Player("전사", 3, 300, 150, 45, 55, 0));
 		guildList.add(new Player("법사", 8, 200, 300, 60, 20, 0));
 		guildList.add(new Player("힐러", 3, 150, 250, 45, 10, 0));

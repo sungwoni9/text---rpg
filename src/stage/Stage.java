@@ -25,10 +25,6 @@ public abstract class Stage {
 	protected BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	protected BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
 
-	public boolean update() {
-		return false;
-	}
-
 	public String getNextStage() {
 		return nextStage;
 	}
