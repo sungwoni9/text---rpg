@@ -1,4 +1,4 @@
-package Textrpg;
+package textRpg;
 
 public class TextTPG {
 
