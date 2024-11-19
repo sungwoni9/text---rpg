@@ -1,10 +1,11 @@
-package playerSystem;
+package stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
-import stage.Stage;
+import textRpg.GameManager;
 import units.Player;
 import units.Unit;
 
@@ -78,7 +79,7 @@ public class Guild extends Stage {
 
 	public void printAllUnitStaus() {
 		buffer.append("======================================");
-		buffer.append("[골드 : " + Player.money + "]");
+		buffer.append("[골드 : " + Player.getMoney() + "]");
 		buffer.append("============= [길드원] =================");
 		for (int i = 0; i < guildList.size(); i++) {
 			Player player = guildList.get(i);
@@ -105,11 +106,49 @@ public class Guild extends Stage {
 	}
 
 	private void partyChange() {
+		printParty();
 
 	}
 
-	private void removeUnit() {
+	private void printParty() {
+		buffer.setLength(0);
+		buffer.append("===== 파티원 =====");
+		for (int i = 0; i < PARTY_SIZE; i++) {
+			buffer.append(String.format("\n[%d | %s | %d ]\t", i + 1, guildList.get(i).getName(),
+					guildList.get(i).getLevel()));
+		}
+		try {
+			writer.write(buffer.toString());
+			writer.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	private void removeUnit() {
+		printParty();
+		int selection = GameManager.selMenu("삭제할 파티원을 선택하세요");
+
+		if (selection > 0 && selection <= PARTY_SIZE) {
+			Player playerToRemove = guildList.get(selection - 1);
+			playerToRemove.setParty(false);
+
+			Player[] temp = new Player[PARTY_SIZE - 1];
+			int tempIndex = 0;
+
+
+			for (int i = 0; i < PARTY_SIZE; i++) {
+				if (!partyList[i].equals(playerToRemove)) {
+					temp[tempIndex] =  guildList.get(i);
+					tempIndex++;
+				}
+			}
+			partyList = temp;
+
+			buffer.append(playerToRemove.getName() + "님이 파티에서 제외되었습니다.");
+		} else {
+			return;
+		}
 	}
 
 	private void addUnit() {
