@@ -152,8 +152,8 @@ public class Player extends Unit {
 
 	}
 
-	public int getCurrentHp() {
-		this.currentHp = currentHp;
+	public void getCurrentHp() {
+		this.maxHp = maxHp;
 	}
 
 	public String name() {
