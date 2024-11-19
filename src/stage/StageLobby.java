@@ -1,49 +1,37 @@
 package stage;
 
 import manager.IOManager;
-import textRpg.GameManager;
 
 public class StageLobby implements Stage {
-	
 
 	private final int BATTLE = 1;
 	private final int MENU = 2;
 	private final int EXIT = 3;
 
 	@Override
-	public void update() {
-		.setLength(0);
-		System.out.println();
-		GameManager.writer.append("=====[LOBBY]=====\n");
-		GameManager.writer.append("[1. 전투] [2. 메뉴] [3. 종료]\n☞");
+	public boolean update() {
+		printLobby();
 
 		try {
-			GameManager.writer.write(buffer.toString());
-			GameManager.writer.flush();
 
-			String input = GameManager.reader.readLine();
-			int sel = Integer.parseInt(input);
-
-			if (sel == BATTLE) {
-				StageSetting.nextStage = "BATTLE";
+			int sel = (int) IOManager.selMenu(Integer.class, "메뉴를 선택하세요");
+			switch (sel) {
+			case BATTLE -> StageSetting.setNextStage("BATTLE");
+			case MENU -> StageSetting.setNextStage("MENU");
+			case EXIT -> StageSetting.setNextStage("EXIT");
+			default -> System.err.println("올바르지 않은 선택입니다. 다시 입력하세요.");
 			}
 
-			else if (sel == MENU) {
-				StageSetting.nextStage = "MENU";
-			}
-
-			else if (sel == EXIT) {
-				StageSetting.nextStage = "EXIT";
-			}
-
+		} catch (NumberFormatException e) {
+			System.err.println("숫자를 입력해주세요!");
 		} catch (Exception e) {
-			System.err.println("입력값 오류!!");
-
+			System.err.println("입력 오류가 발생했습니다.");
 		}
+		return false;
 
 	}
 
-	private void printMainStage() {
+	private void printLobby() {
 		String msg = """
 
 				========================
@@ -60,7 +48,6 @@ public class StageLobby implements Stage {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 
 	}
 
