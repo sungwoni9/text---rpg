@@ -60,7 +60,7 @@ public class Guild implements Stage {
 			buffer.append("[4.길드원 교체]\t\t[5.순서 변경]\t\t[0.뒤로가기]");
 
 			int sel = GameManager.selMenu("메뉴를 선택하세요");
-		
+
 			try {
 
 				if (sel == PRINT) {
@@ -124,28 +124,51 @@ public class Guild implements Stage {
 
 	}
 
+	public void addToGuild(Unit selectedUnit) {
+		if (selectedUnit != null) {
+			if (guildList.size() < MAX_GUILD_MEMBERS) {
+				guildList.add((Player) selectedUnit);
+				selectedUnit.setGuild(true);
+
+				ArrayList<Player> tempPartyList = new ArrayList<>();
+				for (int i = 0; i < guildList.size(); i++) {
+					if (guildList.get(i).isGuild()) {
+						tempPartyList.add(guildList.get(i));
+					}
+				}
+
+				partyList = tempPartyList.toArray(new Player[PARTY_SIZE]);
+				buffer.append(selectedUnit.getName() + "을/를 길드에 추가했습니다.");
+			}
+		} else {
+			System.out.println("잘못된 유닛입니다.");
+		}
+	}
+
 	private void removeUnit() {
 		printGuild();
+		
 		int selection = GameManager.selMenu("삭제할 파티원을 선택하세요");
 
 		if (selection > 0 && selection <= PARTY_SIZE) {
 			Player playerToRemove = guildList.get(selection - 1);
 			playerToRemove.setGuild(false);
 
-			Player[] temp = new Player[PARTY_SIZE - 1];
-			int tempIndex = 0;
+			ArrayList<Player> tempGuildList = new ArrayList<>(guildList);
+			tempGuildList.remove(playerToRemove);
 
-			for (int i = 0; i < PARTY_SIZE; i++) {
-				if (!partyList[i].equals(playerToRemove)) {
-					temp[tempIndex] = guildList.get(i);
-					tempIndex++;
+			ArrayList<Player> tempPartyList = new ArrayList<>();
+			for (int i = 0; i < tempGuildList.size(); i++) {
+				if (tempGuildList.get(i).isGuild()) {
+					tempPartyList.add(tempGuildList.get(i));
 				}
 			}
-			partyList = temp;
+			
+			partyList = tempPartyList.toArray(new Player[PARTY_SIZE]);
 
 			buffer.append(playerToRemove.getName() + "님이 파티에서 제외되었습니다.");
 		} else {
-			return;
+			buffer.append("잘못된 선택입니다.");
 		}
 	}
 
@@ -188,16 +211,6 @@ public class Guild implements Stage {
 				e.printStackTrace();
 			}
 
-		}
-	}
-
-	public void addToGuild(Player selectedUnit) {
-		if (selectedUnit != null) {
-			guildList.add(selectedUnit);
-			buffer.append(selectedUnit.getName() + "을/를 길드에 추가했습니다.");
-
-		} else {
-			System.out.println("잘못된 유닛입니다.");
 		}
 	}
 
