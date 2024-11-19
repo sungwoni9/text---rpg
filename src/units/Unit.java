@@ -1,6 +1,6 @@
 package units;
 
-import playerSystem.Item;
+import stage.Item;
 
 public abstract class Unit {
 
@@ -28,8 +28,8 @@ public abstract class Unit {
 		Unit.maxHp = hp;
 		Unit.hp = maxHp;
 		Unit.att = att;
-		Unit.luck = luck;
 		Unit.def = def;
+		Unit.luck = luck;
 		Unit.exp = exp;
 		party = false;
 		weapon = null;
@@ -44,8 +44,8 @@ public abstract class Unit {
 		Unit.maxHp = hp;
 		Unit.hp = maxHp;
 		Unit.att = att;
-		Unit.luck = luck;
 		Unit.def = def;
+		Unit.luck = luck;
 		Unit.exp = exp;
 		Unit.party = party;
 		weapon = null;
@@ -84,7 +84,7 @@ public abstract class Unit {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		Unit.name = name;
 	}
 
 	public int getLevel() {
@@ -92,7 +92,7 @@ public abstract class Unit {
 	}
 
 	public void setLevel(int level) {
-		this.level = level;
+		Unit.level = level;
 	}
 
 	public int getHp() {
@@ -100,7 +100,7 @@ public abstract class Unit {
 	}
 
 	public void setHp(int hp) {
-		this.hp = hp;
+		Unit.hp = hp;
 	}
 
 	public int getMaxHp() {
@@ -108,7 +108,7 @@ public abstract class Unit {
 	}
 
 	public void setMaxHp(int maxHp) {
-		this.maxHp = maxHp;
+		Unit.maxHp = maxHp;
 	}
 
 	public int getAtt() {
@@ -116,7 +116,7 @@ public abstract class Unit {
 	}
 
 	public void setAtt(int att) {
-		this.att = att;
+		Unit.att = att;
 	}
 
 	public int getDef() {
@@ -124,7 +124,7 @@ public abstract class Unit {
 	}
 
 	public void setDef(int def) {
-		this.def = def;
+		Unit.def = def;
 	}
 
 	public int getLuck() {
@@ -132,7 +132,7 @@ public abstract class Unit {
 	}
 
 	public void setLuck(int luck) {
-		this.luck = luck;
+		Unit.luck = luck;
 	}
 
 	public int getExp() {
@@ -140,15 +140,15 @@ public abstract class Unit {
 	}
 
 	public void setExp(int exp) {
-		this.exp = exp;
+		Unit.exp = exp;
 	}
 
-	public boolean isParty() {
+	public boolean isGuild() {
 		return party;
 	}
 
-	public void setParty(boolean party) {
-		this.party = party;
+	public void setGuild(boolean party) {
+		Unit.party = party;
 	}
 
 	public Item getWeapon() {
@@ -156,7 +156,7 @@ public abstract class Unit {
 	}
 
 	public void setWeapon(Item weapon) {
-		this.weapon = weapon;
+		Unit.weapon = weapon;
 	}
 
 	public Item getArmor() {
@@ -164,7 +164,7 @@ public abstract class Unit {
 	}
 
 	public void setArmor(Item armor) {
-		this.armor = armor;
+		Unit.armor = armor;
 	}
 
 	public Item getRing() {
@@ -172,15 +172,15 @@ public abstract class Unit {
 	}
 
 	public void setRing(Item ring) {
-		this.ring = ring;
+		Unit.ring = ring;
 	}
 
-	public String getState() {
+	public static String getState() {
 		return state;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public static void setState(String state) {
+		Unit.state = state;
 	}
 
 }
