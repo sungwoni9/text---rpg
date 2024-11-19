@@ -1,6 +1,8 @@
 package stage;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
@@ -14,6 +16,7 @@ public class Guild extends Stage {
 	final static int PARTY_SIZE = 3;
 	public static Vector<Player> guildList = new Vector<>();
 	private StringBuffer buffer = new StringBuffer();
+	protected BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
 
 	Random random = new Random();
 	static Unit[] partyList;
@@ -21,28 +24,32 @@ public class Guild extends Stage {
 	private final int PRINT = 1;
 	private final int ADD = 2;
 	private final int REMOVE = 3;
-	private final int CHANGEPARTY = 4;
+	private final int CHANGEUNIT = 4;
 	private final int CHANGEORDER = 5;
 	private final int BACK = 0;
 
 	public static void setGuild() {
-		guildList.add(new Player("전사", 3, 300, 150, 45, 55, 0));
-		guildList.add(new Player("법사", 8, 200, 300, 60, 20, 0));
-		guildList.add(new Player("힐러", 3, 150, 250, 45, 10, 0));
+		guildList.add(new Player("전사", 3, 300, 150, 100, 5, 0));
+		guildList.add(new Player("법사", 8, 200, 300, 40, 10, 0));
+		guildList.add(new Player("힐러", 3, 150, 100, 20, 15, 0));
 
 		for (int i = 0; i < PARTY_SIZE; i++) {
-			guildList.get(i).setGuild() = true;
+			guildList.get(i).setGuild(true);
 		}
 
 		partyList = new Unit[PARTY_SIZE];
 
 		int idx = 0;
 		for (int i = 0; i < guildList.size(); i++) {
-			if (guildList.get(i).isParty() == true) {
+			if (guildList.get(i).isGuild() == true) {
 				partyList[idx] = guildList.get(i);
 				idx += 1;
 			}
 		}
+	}
+
+	public static Player getGuildUnit(int num) {
+		return guildList.get(num);
 	}
 
 	@Override
@@ -60,11 +67,11 @@ public class Guild extends Stage {
 				if (sel == PRINT) {
 					printAllUnitStaus();
 				} else if (sel == ADD) {
-					addToGuild();
+					buyUnit();
 				} else if (sel == REMOVE) {
 					removeUnit();
-				} else if (sel == CHANGEPARTY) {
-					changeGuildOrder();
+				} else if (sel == CHANGEUNIT) {
+					changeGuildUnit();
 				} else if (sel == CHANGEORDER) {
 					changeGuildOrder();
 				} else if (sel == BACK) {
@@ -88,7 +95,8 @@ public class Guild extends Stage {
 			buffer.append(" [체력 : ").append(player.getMaxHp()).append("]");
 			buffer.append(" [공격력 : ").append(player.getAtt()).append("]");
 			buffer.append(" [방어력 : ").append(player.getDef()).append("]");
-			buffer.append(" [파티중 : ").append(player.isParty()).append("]\n");
+			buffer.append(" [행운 : ").append(player.getDef()).append("]");
+			buffer.append(" [파티중 : ").append(player.isGuild()).append("]\n");
 		}
 
 		buffer.append("======================================");
@@ -105,50 +113,48 @@ public class Guild extends Stage {
 		System.out.println("===== 길드원 목록 =====");
 		for (int i = 0; i < guildList.size(); i++) {
 			Unit unit = guildList.get(i);
-			System.out.println((i + 1) + ". " + unit.getName() + (unit.isParty() ? " (파티)" : ""));
+			System.out.println((i + 1) + ". " + unit.getName() + (unit.isGuild() ? " (파티)" : ""));
 		}
 	}
 
-	private void addToGuild(Unit unit) {
-		for (int i = 0; i < PARTY_SIZE; i++) {
-			if (partyList[i] == null) {
-				partyList[i] = unit;
-				unit.setParty(true);
-				break;
-			}
+	public void buyUnit() {
+		int money = Player.getMoney();
+		if (money < 5000)
+			return;
+		String[] n1 = { "박", "이", "김", "최", "유", "지", "오" };
+		String[] n2 = { "명", "기", "종", "민", "재", "석", "광" };
+		String[] n3 = { "수", "자", "민", "수", "석", "민", "철" };
+
+		String name = n1[random.nextInt(n1.length)];
+		name += n2[random.nextInt(n2.length)];
+		name += n3[random.nextInt(n3.length)];
+
+		int rNum = random.nextInt(8) + 2;
+		int hp = rNum * 11;
+		int att = rNum + 1;
+		int def = rNum / 2 + 1;
+		int luck = rNum / 3;
+
+		Player temp = new Player(name, 1, hp, att, def, luck, 0);
+		System.out.println("=====================================");
+		System.out.print("[이름 : " + name + "]");
+		System.out.print(" [레벨 : " + 1 + "]");
+		System.out.print(" [체력 : " + hp);
+		System.out.println(" / " + hp + "]");
+		System.out.print("[공격력 : " + att + "]");
+		System.out.println(" [방어력 : " + def + "]");
+		System.out.println("길드원을 추가합니다.");
+		System.out.println("=====================================");
+
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-	}
 
-	public void changeGuildOrder() {
-		boolean isRun = true;
-		while (isRun) {
+		guildList.add(temp);
+		Player.setMoney(money - 5000);
 
-			printGuild();
-			int selection = GameManager.selMenu("교체할 길드원을 선택하세요(종료:0)") - 1;
-
-			if (selection == -1) {
-				break;
-			}
-
-			if (selection >= 0 && selection < guildList.size()) {
-				Unit selectedUnit = guildList.get(selection);
-
-				if (!selectedUnit.isParty()) {
-					addToGuild(selectedUnit);
-					System.out.println(selectedUnit.getName() + "을/를 파티에 추가했습니다.");
-				} else {
-					System.out.println("이미 파티에 포함된 유닛입니다.");
-				}
-			} else {
-				System.out.println("잘못된 선택입니다.");
-			}
-
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	private void removeUnit() {
@@ -157,7 +163,7 @@ public class Guild extends Stage {
 
 		if (selection > 0 && selection <= PARTY_SIZE) {
 			Player playerToRemove = guildList.get(selection - 1);
-			playerToRemove.setParty(false);
+			playerToRemove.setGuild(false);
 
 			Player[] temp = new Player[PARTY_SIZE - 1];
 			int tempIndex = 0;
@@ -176,6 +182,56 @@ public class Guild extends Stage {
 		}
 	}
 
+	public void changeGuildOrder() {
+
+	}
+
+	public void changeGuildUnit() {
+		boolean isRun = true;
+		while (isRun) {
+
+			printGuild();
+			int selection = GameManager.selMenu("교체할 길드원을 선택하세요(종료:0)") - 1;
+
+			if (selection == -1) {
+				break;
+			}
+
+			if (selection >= 0 && selection < guildList.size()) {
+				Unit selectedUnit = guildList.get(selection);
+
+				if (!selectedUnit.isGuild()) {
+					addToGuild(selectedUnit);
+					buffer.append(selectedUnit.getName() + "을/를 파티에 추가했습니다.");
+				} else {
+					buffer.append("이미 파티에 포함된 유닛입니다.");
+				}
+
+			} else {
+				buffer.append("잘못된 선택입니다.");
+			}
+
+			try {
+				writer.write(buffer.toString());
+				writer.flush();
+				buffer.setLength(0);
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void addToGuild(Unit selectedUnit) {
+		if (selectedUnit != null) {
+			guildList.add(selectedUnit);
+			buffer.append(selectedUnit.getName() + "을/를 길드에 추가했습니다.");
+
+		} else {
+			System.out.println("잘못된 유닛입니다.");
+		}
+	}
+
 	public void printUnitStaus(int selUnit) {
 		guildList.get(selUnit);
 		Player.getStatus();
@@ -184,13 +240,6 @@ public class Guild extends Stage {
 	public void printUnitItem(int selUnit) {
 		guildList.get(selUnit);
 		Player.printEquitedItem();
-	}
-
-	static public Player getGuildUnit(int num) {
-		if (num >= 0 && num < guildList.size()) {
-			return guildList.get(num);
-		}
-		return null;
 	}
 
 }
