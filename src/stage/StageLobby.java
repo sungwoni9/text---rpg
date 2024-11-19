@@ -1,19 +1,21 @@
 package stage;
 
+import manager.IOManager;
 import textRpg.GameManager;
-import units.UnitManager;
 
-public class StageLobby extends Stage {
+public class StageLobby implements Stage {
+	
+
 	private final int BATTLE = 1;
 	private final int MENU = 2;
 	private final int EXIT = 3;
 
 	@Override
-	public boolean update() {
-		buffer.setLength(0);
+	public void update() {
+		.setLength(0);
 		System.out.println();
-		buffer.append("=====[LOBBY]=====\n");
-		buffer.append("[1. 전투] [2. 메뉴] [3. 종료]\n☞");
+		GameManager.writer.append("=====[LOBBY]=====\n");
+		GameManager.writer.append("[1. 전투] [2. 메뉴] [3. 종료]\n☞");
 
 		try {
 			GameManager.writer.write(buffer.toString());
@@ -23,15 +25,15 @@ public class StageLobby extends Stage {
 			int sel = Integer.parseInt(input);
 
 			if (sel == BATTLE) {
-				GameManager.nextStage = "BATTLE";
+				StageSetting.nextStage = "BATTLE";
 			}
 
 			else if (sel == MENU) {
-				GameManager.nextStage = "MENU";
+				StageSetting.nextStage = "MENU";
 			}
 
 			else if (sel == EXIT) {
-				GameManager.nextStage = "EXIT";
+				StageSetting.nextStage = "EXIT";
 			}
 
 		} catch (Exception e) {
@@ -39,14 +41,27 @@ public class StageLobby extends Stage {
 
 		}
 
-		return false;
 	}
-	
-	
+
+	private void printMainStage() {
+		String msg = """
+
+				========================
+				=       < Lobby >     =
+				=       1. 전투 	      =
+				=       2. 메뉴	      =
+				=       3. 종료        =
+				=                     =
+				= (원하는 메뉴를 입력하세요) =
+				=======================
+				""";
+		IOManager.printString(msg);
+	}
 
 	@Override
 	public void init() {
-		UnitManager.instance.init();
+		// TODO Auto-generated method stub
+
 	}
 
 }
