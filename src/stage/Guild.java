@@ -31,7 +31,7 @@ public class Guild extends Stage {
 		guildList.add(new Player("힐러", 3, 150, 250, 45, 10, 0));
 
 		for (int i = 0; i < PARTY_SIZE; i++) {
-			guildList.get(i).setParty() = true;
+			guildList.get(i).setGuild() = true;
 		}
 
 		partyList = new Unit[PARTY_SIZE];
@@ -60,13 +60,13 @@ public class Guild extends Stage {
 				if (sel == PRINT) {
 					printAllUnitStaus();
 				} else if (sel == ADD) {
-					addUnit();
+					addToGuild();
 				} else if (sel == REMOVE) {
 					removeUnit();
 				} else if (sel == CHANGEPARTY) {
-					partyChange();
+					changeGuildOrder();
 				} else if (sel == CHANGEORDER) {
-					changeOrder();
+					changeGuildOrder();
 				} else if (sel == BACK) {
 					break;
 				}
@@ -101,15 +101,29 @@ public class Guild extends Stage {
 		}
 	}
 
-	private void changeOrder() {
-
+	private void printGuild() {
+		System.out.println("===== 길드원 목록 =====");
+		for (int i = 0; i < guildList.size(); i++) {
+			Unit unit = guildList.get(i);
+			System.out.println((i + 1) + ". " + unit.getName() + (unit.isParty() ? " (파티)" : ""));
+		}
 	}
 
-	public void partyChange() {
+	private void addToGuild(Unit unit) {
+		for (int i = 0; i < PARTY_SIZE; i++) {
+			if (partyList[i] == null) {
+				partyList[i] = unit;
+				unit.setParty(true);
+				break;
+			}
+		}
+	}
+
+	public void changeGuildOrder() {
 		boolean isRun = true;
 		while (isRun) {
 
-			printParty();
+			printGuild();
 			int selection = GameManager.selMenu("교체할 길드원을 선택하세요(종료:0)") - 1;
 
 			if (selection == -1) {
@@ -119,8 +133,8 @@ public class Guild extends Stage {
 			if (selection >= 0 && selection < guildList.size()) {
 				Unit selectedUnit = guildList.get(selection);
 
-				if (!selectedUnit.party) {
-					addToParty(selectedUnit);
+				if (!selectedUnit.isParty()) {
+					addToGuild(selectedUnit);
 					System.out.println(selectedUnit.getName() + "을/를 파티에 추가했습니다.");
 				} else {
 					System.out.println("이미 파티에 포함된 유닛입니다.");
@@ -137,33 +151,8 @@ public class Guild extends Stage {
 		}
 	}
 
-	private void addToParty(Unit unit) {
-
-		for (int i = 0; i < PARTY_SIZE; i++) {
-			if (partyList[i] == null)
-				partyList[i] = unit;
-			unit.party = true;
-			break;
-		}
-	}
-
-	private void printParty() {
-		buffer.setLength(0);
-		buffer.append("===== 파티원 =====");
-		for (int i = 0; i < PARTY_SIZE; i++) {
-			buffer.append(String.format("\n[%d | %s | %d ]\t", i + 1, guildList.get(i).getName(),
-					guildList.get(i).getLevel()));
-		}
-		try {
-			writer.write(buffer.toString());
-			writer.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void removeUnit() {
-		printParty();
+		printGuild();
 		int selection = GameManager.selMenu("삭제할 파티원을 선택하세요");
 
 		if (selection > 0 && selection <= PARTY_SIZE) {
@@ -186,7 +175,6 @@ public class Guild extends Stage {
 			return;
 		}
 	}
-
 
 	public void printUnitStaus(int selUnit) {
 		guildList.get(selUnit);
