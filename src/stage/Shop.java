@@ -1,6 +1,12 @@
-package playerSystem;
+package stage;
 
+public class Shop implements Stage {
 
-public class Shop {
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
