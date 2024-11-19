@@ -5,14 +5,13 @@ import java.util.Random;
 import java.util.Vector;
 
 import stage.Stage;
-import textRpg.GameManager;
 import units.Player;
 import units.Unit;
 
-abstract public class Guild extends Stage {
+public class Guild extends Stage {
 
 	final static int PARTY_SIZE = 3;
-	static Vector<Player> guildList = new Vector<>();
+	public static Vector<Player> guildList = new Vector<>();
 	private StringBuffer buffer = new StringBuffer();
 
 	Random random = new Random();
@@ -45,31 +44,8 @@ abstract public class Guild extends Stage {
 		}
 	}
 
-	public void printAllUnitStaus() {
-		buffer.append("======================================");
-		buffer.append("[골드 : " + Player.money + "]");
-		buffer.append("============= [길드원] =================");
-		for (int i = 0; i < guildList.size(); i++) {
-			buffer.append("[" + (i + 1) + "번]");
-			buffer.append(" [이름 : " + guildList.get(i).name + "]");
-			buffer.append(" [레벨 : " + guildList.get(i).level + "]");
-			buffer.append(" [체력 : " + guildList.get(i).hp);
-			buffer.append(" / " + guildList.get(i).maxHp + "]");
-			buffer.append("[공격력 : " + guildList.get(i).att + "]");
-			buffer.append(" [방어력 : " + guildList.get(i).def + "]");
-			buffer.append(" [파티중 : " + guildList.get(i).party + "]");
-		}
-		buffer.append("======================================");
-
-		try {
-			writer.write(buffer.toString());
-			writer.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void guildMenu() {
+	@Override
+	public boolean update() {
 		while (true) {
 			buffer.append("=============== [길드관리] ================");
 			buffer.append("[1.길드 목록]\t\t[2.길드원 추가]\t\t[3.길드원 삭제]");
@@ -97,6 +73,31 @@ abstract public class Guild extends Stage {
 				e.printStackTrace();
 			}
 		}
+		return false;
+	}
+
+	public void printAllUnitStaus() {
+		buffer.append("======================================");
+		buffer.append("[골드 : " + Player.money + "]");
+		buffer.append("============= [길드원] =================");
+		for (int i = 0; i < guildList.size(); i++) {
+			Player player = guildList.get(i);
+			buffer.append("[").append(i + 1).append("번] [이름 : ").append(player.getName());
+			buffer.append("] [레벨 : ").append(player.getLevel()).append("]");
+			buffer.append(" [체력 : ").append(player.getMaxHp()).append("]");
+			buffer.append(" [공격력 : ").append(player.getAtt()).append("]");
+			buffer.append(" [방어력 : ").append(player.getDef()).append("]");
+			buffer.append(" [파티중 : ").append(player.isParty()).append("]\n");
+		}
+
+		buffer.append("======================================");
+
+		try {
+			writer.write(buffer.toString());
+			writer.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void changeOrder() {
@@ -121,7 +122,7 @@ abstract public class Guild extends Stage {
 
 	public void printUnitStaus(int selUnit) {
 		guildList.get(selUnit);
-		Player.printStatus();
+		Player.getStatus();
 	}
 
 	public void printUnitItem(int selUnit) {
