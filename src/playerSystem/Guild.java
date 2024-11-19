@@ -22,7 +22,7 @@ public class Guild extends Stage {
 	private final int REMOVE = 3;
 	private final int CHANGEPARTY = 4;
 	private final int CHANGEORDER = 5;
-	private final int BACK = 6;
+	private final int BACK = 0;
 
 	public static void setGuild() {
 		guildList.add(new Player("전사", 3, 300, 150, 45, 55, 0));
@@ -30,14 +30,14 @@ public class Guild extends Stage {
 		guildList.add(new Player("힐러", 3, 150, 250, 45, 10, 0));
 
 		for (int i = 0; i < PARTY_SIZE; i++) {
-			guildList.get(i).member = true;
+			guildList.get(i).setParty() = true;
 		}
 
 		partyList = new Unit[PARTY_SIZE];
 
 		int idx = 0;
 		for (int i = 0; i < guildList.size(); i++) {
-			if (guildList.get(i).member == true) {
+			if (guildList.get(i).isParty() == true) {
 				partyList[idx] = guildList.get(i);
 				idx += 1;
 			}
@@ -116,10 +116,6 @@ public class Guild extends Stage {
 
 	}
 
-	static public Player getGuildUnit(int num) {
-		return Guild.getGuildUnit(num);
-	}
-
 	public void printUnitStaus(int selUnit) {
 		guildList.get(selUnit);
 		Player.getStatus();
@@ -128,6 +124,13 @@ public class Guild extends Stage {
 	public void printUnitItem(int selUnit) {
 		guildList.get(selUnit);
 		Player.printEquitedItem();
+	}
+
+	static public Player getGuildUnit(int num) {
+		if (num >= 0 && num < guildList.size()) {
+			return guildList.get(num);
+		}
+		return null;
 	}
 
 }
