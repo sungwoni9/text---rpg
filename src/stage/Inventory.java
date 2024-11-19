@@ -2,18 +2,16 @@ package stage;
 
 import java.util.ArrayList;
 
-public class Inventory extends Stage{
+public class Inventory implements Stage{
 	public ArrayList<Item> itemList = new ArrayList<>();
 
-	@Override
-	public boolean update() {
-		return false;
+	public void inventoryMenu() {
+		
 	}
 
 	@Override
-	public void init() {
-
+	public void update() {
+		
 	}
-
 
 }

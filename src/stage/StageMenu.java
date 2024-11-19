@@ -1,9 +1,9 @@
 package stage;
 
-import textRpg.GameManager;
+import manager.GameManager;
 import units.UnitManager;
 
-public class StageMenu extends Stage {
+public class StageMenu implements Stage {
 
 	private final int GUILD = 1;
 	private final int SHOP = 2;
@@ -35,8 +35,9 @@ public class StageMenu extends Stage {
 	}
 
 	@Override
-	public void init() {
-		UnitManager.instance.init();
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

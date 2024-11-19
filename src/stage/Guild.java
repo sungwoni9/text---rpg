@@ -1,13 +1,12 @@
 package stage;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 
-import textRpg.GameManager;
+import manager.IOManager;
 import units.Player;
 import units.Unit;
 
@@ -53,13 +52,13 @@ public class Guild implements Stage {
 	}
 
 	@Override
-	public void activateStage() {
+	public boolean update() {
 		while (true) {
 			buffer.append("=============== [길드관리] ================");
 			buffer.append("[1.길드 목록]\t\t[2.길드원 추가]\t\t[3.길드원 삭제]");
 			buffer.append("[4.길드원 교체]\t\t[5.순서 변경]\t\t[0.뒤로가기]");
 
-			int sel = GameManager.selMenu("메뉴를 선택하세요");
+			int sel = (int) IOManager.selMenu(Integer.class, "☞");
 
 			try {
 
@@ -70,9 +69,9 @@ public class Guild implements Stage {
 				} else if (sel == REMOVE) {
 					removeUnit();
 				} else if (sel == CHANGEUNIT) {
-					changeGuildUnit();
-				} else if (sel == CHANGEORDER) {
 					changeGuildOrder();
+				} else if (sel == CHANGEORDER) {
+					removeAndAddGuildUnit();
 				} else if (sel == BACK) {
 					break;
 				}
@@ -80,6 +79,7 @@ public class Guild implements Stage {
 				e.printStackTrace();
 			}
 		}
+		return false;
 
 	}
 
@@ -94,12 +94,12 @@ public class Guild implements Stage {
 		for (int i = 0; i < guildList.size(); i++) {
 			Player player = guildList.get(i);
 			buffer.append("[").append(i + 1).append("번] [이름 : ").append(player.getName());
-			buffer.append("] [레벨 : ").append(player.getLevel()).append("]");
-			buffer.append(" [체력 : ").append(player.getMaxHp()).append("]");
-			buffer.append(" [공격력 : ").append(player.getAtt()).append("]");
-			buffer.append(" [방어력 : ").append(player.getDef()).append("]");
-			buffer.append(" [행운 : ").append(player.getDef()).append("]");
-			buffer.append(" [파티중 : ").append(player.isGuild()).append("]\n");
+			buffer.append("] [레벨 : ").append(Unit.getLevel()).append("]");
+			buffer.append(" [체력 : ").append(Unit.getMaxHp()).append("]");
+			buffer.append(" [공격력 : ").append(Unit.getAtt()).append("]");
+			buffer.append(" [방어력 : ").append(Unit.getDef()).append("]");
+			buffer.append(" [행운 : ").append(Unit.getDef()).append("]");
+			buffer.append(" [파티중 : ").append(Unit.isGuild()).append("]\n");
 		}
 
 		buffer.append("======================================");
@@ -147,11 +147,11 @@ public class Guild implements Stage {
 
 	private void removeUnit() {
 		printGuild();
-		
-		int selection = GameManager.selMenu("삭제할 파티원을 선택하세요");
 
-		if (selection > 0 && selection <= PARTY_SIZE) {
-			Player playerToRemove = guildList.get(selection - 1);
+		int sel = (int) IOManager.selMenu(Integer.class, "삭제할 길드원을 선택하세요");
+
+		if (sel > 0 && sel <= PARTY_SIZE) {
+			Player playerToRemove = guildList.get(sel - 1);
 			playerToRemove.setGuild(false);
 
 			ArrayList<Player> tempGuildList = new ArrayList<>(guildList);
@@ -163,7 +163,7 @@ public class Guild implements Stage {
 					tempPartyList.add(tempGuildList.get(i));
 				}
 			}
-			
+
 			partyList = tempPartyList.toArray(new Player[PARTY_SIZE]);
 
 			buffer.append(playerToRemove.getName() + "님이 파티에서 제외되었습니다.");
@@ -176,19 +176,18 @@ public class Guild implements Stage {
 
 	}
 
-	public void changeGuildUnit() {
+	public void removeAndAddGuildUnit() {
 		boolean isRun = true;
 		while (isRun) {
 
 			printGuild();
-			int selection = GameManager.selMenu("교체할 길드원을 선택하세요(종료:0)") - 1;
-
-			if (selection == -1) {
+			int sel = (int) IOManager.selMenu(Integer.class, "☞");
+			if (sel == -1) {
 				break;
 			}
 
-			if (selection >= 0 && selection < guildList.size()) {
-				Unit selectedUnit = guildList.get(selection);
+			if (sel >= 0 && sel < guildList.size()) {
+				Unit selectedUnit = guildList.get(sel);
 
 				if (!selectedUnit.isGuild()) {
 					addToGuild(selectedUnit);
@@ -222,6 +221,11 @@ public class Guild implements Stage {
 	public void printUnitItem(int selUnit) {
 		guildList.get(selUnit);
 		Player.printEquitedItem();
+	}
+
+	@Override
+	public void init() {
+
 	}
 
 }

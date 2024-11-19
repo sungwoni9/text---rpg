@@ -3,12 +3,12 @@ package stage;
 import java.util.Random;
 import java.util.Vector;
 
-import textRpg.GameManager;
+import manager.IOManager;
 import units.Monster;
 import units.Player;
 import units.UnitManager;
 
-public class StageBattle extends Stage {
+public class StageBattle implements Stage {
 
 	UnitManager unit = null;
 	Vector<Monster> monsterList = null;
@@ -21,7 +21,6 @@ public class StageBattle extends Stage {
 		random = new Random();
 	}
 
-	@Override
 	public boolean update() {
 		boolean run = true;
 		int player_N = 0;
@@ -52,7 +51,7 @@ public class StageBattle extends Stage {
 			if (monsterDead <= 0 || playerDead <= 0)
 				break;
 		}
-		GameManager.nextStage = "LOBBY";
+		StageSetting.nextStage = "LOBBY";
 		return false;
 	}
 
@@ -69,22 +68,22 @@ public class StageBattle extends Stage {
 	}
 
 	void print_character() {
-		buffer.setLength(0);
-		buffer.append("======[BATTLE]======\n");
-		buffer.append(playerDead + "\t : \t" + monsterDead);
-		buffer.append("\n======[PLAYER]======");
+		IOManager.buffer.setLength(0);
+		IOManager.buffer.append("======[BATTLE]======\n");
+		IOManager.buffer.append(playerDead + "\t : \t" + monsterDead);
+		IOManager.buffer.append("\n======[PLAYER]======");
 
 		for (int i = 0; i < Player.getGuildSize(); i++) {
 			Player.getGuildUnit(i).printData();
 		}
-		buffer.append("\n======[MONSTER]======");
+		IOManager.buffer.append("\n======[MONSTER]======");
 		for (int i = 0; i < monsterList.size(); i++) {
 			monsterList.get(i).printData();
 		}
 
 		try {
-			writer.write(buffer.toString());
-			writer.flush();
+			IOManager.writer.write(IOManager.buffer.toString());
+			IOManager.writer.flush();
 		} catch (Exception e) {
 		}
 	}
@@ -95,15 +94,14 @@ public class StageBattle extends Stage {
 		if (player.getCurrentHp() <= 0)
 			return;
 
-		buffer.append("======[메뉴 선택]=====");
-		buffer.append("[" + player.name() + "] [1.어택] [2.스킬]");
+		IOManager.buffer.append("======[메뉴 선택]=====");
+		IOManager.buffer.append("[" + player.getName() + "] [1.어택] [2.스킬]");
 
 		try {
-			writer.write(buffer.toString());
-			writer.flush();
+			IOManager.writer.write(IOManager.buffer.toString());
+			IOManager.writer.flush();
 
-			String input = reader.readLine();
-			int sel = Integer.parseInt(input);
+			int sel = (int) IOManager.selMenu(Integer.class, "☞");
 			if (sel == 1) {
 				while (true) {
 					int idx = random.nextInt(monsterList.size());

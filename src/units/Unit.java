@@ -1,6 +1,5 @@
 package units;
 
-import manager.IOManager;
 import stage.Item;
 
 public abstract class Unit {
@@ -18,7 +17,7 @@ public abstract class Unit {
 	protected Item weapon;
 	protected Item armor;
 	protected Item ring;
-	protected String state = "노말";
+	private static StringBuffer buffer = new StringBuffer();
 
 	public Unit(String name, int level, int hp, int att, int def, int luck, int exp) {
 		this.name = name;
@@ -45,8 +44,6 @@ public abstract class Unit {
 		this.armor = armor;
 		this.ring = ring;
 	}
-
-	private static StringBuffer buffer = new StringBuffer();
 
 	public int getLevel() {
 		return level;
@@ -88,6 +85,10 @@ public abstract class Unit {
 		buffer.append(" [파티중 : ").append(party).append("]");
 
 		return buffer.toString();
+	}
+
+	public boolean isGuild() {
+		return false;
 	}
 
 }

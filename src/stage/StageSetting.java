@@ -3,37 +3,65 @@ package stage;
 import java.util.HashMap;
 import java.util.Map;
 
-import textRpg.GameManager;
-import units.UnitManager;
+import manager.IOManager;
 
 public class StageSetting implements Stage {
-	private Map<String, Stage> stageList =  new HashMap<>();
+	private static Map<String, Stage> stageList;
 
 	public static String nextStage = "";
 	public static String currentStage = "";
 
-	public static Object instance;
+	public static StageSetting instance;
+
+	public static StageSetting getInstance() {
+		if (instance == null) {
+			instance = new StageSetting();
+		}
+		return instance;
+	}
 
 	@Override
 	public void init() {
-		UnitManager.getInstance();
+		stageList = new HashMap<String, Stage>();
 		stageList.put("TITLE", new StageInit());
 		stageList.put("LOBBY", new StageLobby());
 		stageList.put("MENU", new StageMenu());
 		stageList.put("GUILDMENU", new Guild());
 		stageList.put("STOREMENU", new Shop());
 		stageList.put("INVENMENU", new Inventory());
-		nextStage = "TITLE";
+		nextStage = "TITLE"; 
+		currentStage = "";
 	}
 
-	@Override
-	public boolean activate() {
-		if (nextStage != null && !nextStage.isEmpty()) {
-			currentStage = nextStage;
-			nextStage = "";
-			return true;
+	public static boolean changeStage() {
+		IOManager.buffer.append("현재 스테이지 :" + currentStage);
+		try {
+			IOManager.writer.write(IOManager.buffer.toString());
+			IOManager.writer.flush();
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return false;
+
+		if (currentStage.equals(nextStage))
+			return false;
+
+		currentStage = nextStage;
+		Stage stage = stageList.get(currentStage);
+		stage.init();
+
+		boolean run = true;
+		while (run) {
+			run = stage.update();
+			if (run == false)
+				break;
+		}
+
+		if (nextStage.equals(""))
+			return false;
+		else
+			return true;
+
 	}
 
 	public static String getNextStage() {
@@ -48,40 +76,9 @@ public class StageSetting implements Stage {
 		return currentStage;
 	}
 
-	public boolean changeStage() {
-		try {
-			GameManager.writer.write("스테이지 변경 중...\n");
-			GameManager.writer.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		if (currentStage.equals(nextStage)) {
-			return true;
-		}
-
-		currentStage = nextStage;
-		Stage stage = stageList.get(currentStage);
-		if (stage != null) {
-			stage.init();
-			while (stage.activate()) {
-			}
-		} else {
-			System.err.println("잘못된 스테이지: " + currentStage);
-			return false;
-		}
-
-		return !nextStage.isEmpty();
-	}
-
 	@Override
-	public void activateStage() {
-		Stage stage = stageList.get(currentStage);
-		if (stage != null) {
-			stage.activate();
-		} else {
-			System.err.println("잘못된 스테이지 : " + currentStage);
-		}
+	public boolean update() {
+		return false;
 	}
 
 }

@@ -7,14 +7,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class IOManager {
-	public static StringBuilder sb;
-	public static BufferedReader br;
-	public static BufferedWriter bw;
+	public static StringBuilder buffer;
+	public static BufferedReader reader;
+	public static BufferedWriter writer;
 
 	private IOManager() {
-		sb = new StringBuilder();
-		br = new BufferedReader(new InputStreamReader(System.in));
-		bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		buffer = new StringBuilder();
+		reader = new BufferedReader(new InputStreamReader(System.in));
+		writer = new BufferedWriter(new OutputStreamWriter(System.out));
 	}
 
 	private static IOManager instance = new IOManager();
@@ -24,28 +24,39 @@ public class IOManager {
 	}
 
 	public static void printString(String msg) {
-		sb.setLength(0);
-		sb.append(msg);
+		buffer.setLength(0);
+		buffer.append(msg);
 		try {
-			bw.append(sb);
-			bw.flush();
+			writer.append(buffer);
+			writer.flush();
 		} catch (IOException e) {
 			return;
 		}
 	}
 
-	public static int selMenu(String msg) {
-		sb.append(msg + "\n ☞ ");
-		int num = -1;
+	public static Object selMenu(Object type, String msg) {
+	    printString(msg);
+	    try {
+	        String input = reader.readLine(); 
+	        
+	        if (type == Integer.class) {
+	            try {
+	                return Integer.parseInt(input);  
+	            } catch (NumberFormatException e) {
+	                System.err.println("잘못된 입력! 숫자를 입력해야 합니다.");
+	                return null; 
+	            }
+	        }
+	        
+	        else if (type == String.class) {
+	            return input; 
+	        }
+	        
+	        return null; 
 
-		try {
-			String input = br.readLine();
-			num = Integer.parseInt(input);
-		} catch (NumberFormatException e) {
-			System.err.println("숫자로 입력하세요");
-		} catch (Exception e) {
-			System.err.println("입력 오류 발생");
-		}
-		return num;
+	    } catch (IOException e) {
+	        System.err.println("입력 오류: " + e.getMessage());
+	        return null; 
+	    }
 	}
 }

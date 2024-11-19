@@ -1,21 +1,20 @@
 package stage;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-
 import manager.IOManager;
 
 public class StageInit implements Stage {
-	StringBuilder bf = IOManager.buffer;
-	BufferedReader br = IOManager.reader;
-	BufferedWriter wr = IOManager.writer;
+
+	@Override
+	public void init() {
+		StageSetting.setNextStage("LOBBY");
+	}
 
 	@Override
 	public boolean update() {
 		printMainMenuGuide();
 		try {
 			String input = (String) IOManager.selMenu(String.class, "☞");
-			
+
 			if ("시작".equals(input)) {
 				StageSetting.nextStage = "LOBBY";
 				return true;
@@ -30,12 +29,7 @@ public class StageInit implements Stage {
 
 	}
 
-	@Override
-	public void init() {
-
-	}
-
-	private void printMainMenuGuide() {
+	public void printMainMenuGuide() {
 		String msg = """
 				=========================
 				=         TEXT PG       =
@@ -47,7 +41,7 @@ public class StageInit implements Stage {
 		IOManager.printString(msg);
 	}
 
-	private void printExitMessage() {
+	public void printExitMessage() {
 		String msg = """
 				=======================
 				=   게임을 를 종료합니다    =

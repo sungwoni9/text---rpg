@@ -48,7 +48,8 @@ public class StageLobby implements Stage {
 
 	@Override
 	public void init() {
-
+		System.out.println("StageLobby에서 nextStage를 MENU로 설정합니다.");
+		StageSetting.setNextStage("MENU");
 	}
 
 }
