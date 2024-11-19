@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import stage.Guild;
+import stage.Inventory;
+import stage.Shop;
 import stage.Stage;
 import stage.StageBattle;
 import stage.StageInit;
@@ -79,11 +82,12 @@ public class GameManager {
 
 	void init() {
 		UnitManager.getInstance();
-
 		stageList.put("TITLE", new StageInit());
 		stageList.put("LOBBY", new StageLobby());
 		stageList.put("MENU", new StageMenu());
-		stageList.put("LOBBY", new StageLobby());
+		stageList.put("GUILDMENU", new Guild());
+		stageList.put("STOREMENU", new Shop());
+		stageList.put("INVENMENU", new Inventory());
 		stageList.put("BATTLE", new StageBattle());
 		nextStage = "TITLE";
 	}
@@ -115,7 +119,7 @@ public class GameManager {
 	}
 
 	public static int selMenu(String msg) {
-		System.out.print(msg + " ☞ ");
+		buffer.append(msg + "\n ☞ ");
 		int num = -1;
 
 		try {
