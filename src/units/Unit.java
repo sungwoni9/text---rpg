@@ -1,23 +1,23 @@
 package units;
 
+import manager.IOManager;
 import stage.Item;
 
 public abstract class Unit {
 
-	protected String name;
-	protected int level;
-	protected int hp;
-	protected int maxHp;
-	protected int att;
-	protected int def;
-	protected int luck;
-	protected int exp;
-	protected boolean party;
+	protected static String name;
+	protected static int level;
+	protected static int hp;
+	protected static int maxHp;
+	protected static int att;
+	protected static int def;
+	protected static int luck;
+	protected static int exp;
+	protected static boolean party;
 
-	protected Item weapon;
-	protected Item armor;
-	protected Item ring;
-	private static StringBuffer buffer = new StringBuffer();
+	protected static Item weapon;
+	protected static Item armor;
+	protected static Item ring;
 
 	public Unit(String name, int level, int hp, int att, int def, int luck, int exp) {
 		this.name = name;
@@ -45,27 +45,27 @@ public abstract class Unit {
 		this.ring = ring;
 	}
 
-	public int getLevel() {
+	public static int getLevel() {
 		return level;
 	}
 
-	public String getName() {
+	public static String getName() {
 		return name;
 	}
 
-	public int getAtt() {
+	public static int getAtt() {
 		return att;
 	}
 
-	public int getMaxHp() {
+	public static int getMaxHp() {
 		return maxHp;
 	}
 
-	public int getHp() {
+	public static int getHp() {
 		return hp;
 	}
 
-	public void setHp(int hp) {
+	public static void setHp(int hp) {
 		this.hp = hp;
 	}
 
@@ -75,16 +75,16 @@ public abstract class Unit {
 		int extraDef = armor == null ? 0 : armor.getPower();
 		int extraluck = ring == null ? 0 : ring.getPower();
 
-		buffer.setLength(0);
-		buffer.append(" [이름 : ").append(name).append("]");
-		buffer.append(" [레벨 : ").append(level).append("]");
-		buffer.append(" [체력 : ").append(maxHp).append(" + ").append(extraHp).append("]");
-		buffer.append(" [공격력 : ").append(att).append(" + ").append(extraAtt).append("]");
-		buffer.append(" [방어력 : ").append(def).append(" + ").append(extraDef).append("]");
-		buffer.append(" [행운 : ").append(luck).append(" + ").append(extraluck).append("]");
-		buffer.append(" [파티중 : ").append(party).append("]");
+		IOManager.buffer.setLength(0);
+		IOManager.buffer.append(" [이름 : ").append(name).append("]");
+		IOManager.buffer.append(" [레벨 : ").append(level).append("]");
+		IOManager.buffer.append(" [체력 : ").append(maxHp).append(" + ").append(extraHp).append("]");
+		IOManager.buffer.append(" [공격력 : ").append(att).append(" + ").append(extraAtt).append("]");
+		IOManager.buffer.append(" [방어력 : ").append(def).append(" + ").append(extraDef).append("]");
+		IOManager.buffer.append(" [행운 : ").append(luck).append(" + ").append(extraluck).append("]");
+		IOManager.buffer.append(" [파티중 : ").append(party).append("]");
 
-		return buffer.toString();
+		return IOManager.buffer.toString();
 	}
 
 	public boolean isGuild() {
